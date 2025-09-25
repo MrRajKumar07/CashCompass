@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cash Compass</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        .transaction-item:hover .action-buttons {
+            opacity: 1;
+        }
+        .doughnut-chart-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: auto;
+        }
+        .doughnut-chart-center-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        .scrollable-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .widget-grid {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
+        @media (min-width: 768px) {
+            .widget-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+        .nav-link.active {
+            background-color: #e5e7eb;
+            color: #111827;
+        }
+        .nav-link.active svg {
+             color: #111827;
+        }
+        
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4 sm:p-6 bg-gradient-to-br from-green-200 to-blue-200">
+
+    <!-- Login Page -->
+    <div id="login-page" class="max-w-md w-full bg-white p-8 rounded-2xl shadow-2xl space-y-6">
+        <h1 class="text-3xl font-bold text-center text-gray-800">Login to Cash Compass</h1>
+        <form id="login-form" class="space-y-4">
+            <div>
+                <label for="login-username" class="block text-sm font-medium text-gray-700">Username</label>
+                <input type="text" id="login-username" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+            <div>
+                <label for="login-password" class="block text-sm font-medium text-gray-700">Password</label>
+                <input type="password" id="login-password" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+            <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg shadow-lg hover:bg-blue-700 transition duration-300">Login</button>
+        </form>
+        <div class="text-center mt-4">
+            <p class="text-sm text-gray-600">Don't have an account? <a href="#" id="show-register" class="text-blue-600 hover:text-blue-800 font-medium">Create one</a></p>
+        </div>
+    </div>
+
+    <!-- Register Page -->
+    <div id="register-page" class="max-w-md w-full bg-white p-8 rounded-2xl shadow-2xl space-y-6 hidden">
+        <h1 class="text-3xl font-bold text-center text-gray-800">Create a New Account</h1>
+        <form id="register-form" class="space-y-4">
+            <div>
+                <label for="register-username" class="block text-sm font-medium text-gray-700">Username</label>
+                <input type="text" id="register-username" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+            <div>
+                <label for="register-password" class="block text-sm font-medium text-gray-700">Password</label>
+                <input type="password" id="register-password" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+            </div>
+            <button type="submit" class="w-full bg-green-600 text-white font-bold py-3 rounded-lg shadow-lg hover:bg-green-700 transition duration-300">Create Account</button>
+        </form>
+        <div class="text-center mt-4">
+            <p class="text-sm text-gray-600">Already have an account? <a href="#" id="show-login" class="text-blue-600 hover:text-blue-800 font-medium">Log in</a></p>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="main-app" class="max-w-6xl w-full bg-white p-0 rounded-2xl shadow-2xl flex flex-col md:flex-row transform transition-all duration-300 hidden">
+        
+        <!-- Desktop Sidebar Navigation -->
+        <nav id="desktop-nav" class="hidden md:flex flex-col w-64 bg-gray-100 p-6 rounded-l-2xl border-r border-gray-200">
+            <div class="flex-1 space-y-4">
+                <h1 class="text-3xl font-bold text-gray-800 mb-6">Cash Compass</h1>
+                <div class="space-y-2">
+                    <button data-page="home-page" class="nav-link nav-btn-desktop w-full py-3 px-4 rounded-xl flex items-center space-x-3 text-gray-700 hover:bg-gray-200 transition duration-200 font-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001 1h3a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1h3a1 1 0 001-1V10m-9 0h6"/>
+                        </svg>
+                        <span>Home</span>
+                    </button>
+                    <button data-page="dashboard-page" class="nav-link nav-btn-desktop w-full py-3 px-4 rounded-xl flex items-center space-x-3 text-gray-700 hover:bg-gray-200 transition duration-200 font-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/>
+                        </svg>
+                        <span>Dashboard</span>
+                    </button>
+                    <button data-page="category-page" class="nav-link nav-btn-desktop w-full py-3 px-4 rounded-xl flex items-center space-x-3 text-gray-700 hover:bg-gray-200 transition duration-200 font-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5.99a2 2 0 012 2v2a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2zM4 14h16a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4a2 2 0 012-2zM4 14h.01M4 18h.01"/>
+                        </svg>
+                        <span>Category</span>
+                    </button>
+                    <button data-page="transaction-page" class="nav-link nav-btn-desktop w-full py-3 px-4 rounded-xl flex items-center space-x-3 text-gray-700 hover:bg-gray-200 transition duration-200 font-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-2.485 0-4.5 2.015-4.5 4.5S9.515 17 12 17s4.5-2.015 4.5-4.5S14.485 8 12 8z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21a9 9 0 110-18 9 9 0 010 18z"/>
+                        </svg>
+                        <span>Transaction</span>
+                    </button>
+                    <button data-page="shared-page" class="nav-link nav-btn-desktop w-full py-3 px-4 rounded-xl flex items-center space-x-3 text-gray-700 hover:bg-gray-200 transition duration-200 font-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20v-2.5a3.5 3.5 0 00-3.5-3.5h-5A3.5 3.5 0 005 17.5V20M12 11a3 3 0 100-6 3 3 0 000 6z"/>
+                        </svg>
+                        <span>Shared</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="text-center mt-8">
+                <button id="logout-button" class="w-full py-2 px-4 rounded-xl text-sm text-red-500 hover:bg-red-100 transition duration-200">Logout</button>
+            </div>
+        </nav>
+        
+        <!-- Main Content Area -->
+        <main class="flex-1 flex flex-col">
+            <header class="w-full bg-white p-4 rounded-t-2xl md:rounded-t-none shadow-md flex justify-between items-center md:hidden">
+                <h1 class="text-3xl font-bold text-gray-800">Cash Compass</h1>
+                <button id="toggle-nav-btn" class="p-2 text-gray-700 hover:bg-gray-200 rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </header>
+
+            <!-- Mobile Top Navigation -->
+            <nav id="mobile-nav" class="md:hidden w-full bg-white p-4 rounded-b-2xl shadow-md hidden">
+                <div id="mobile-menu" class="flex flex-col space-y-2">
+                    <button data-page="home-page" class="nav-btn-mobile w-full py-2 px-4 rounded-lg text-gray-700 text-left hover:bg-gray-100 transition duration-200">Home</button>
+                    <button data-page="dashboard-page" class="nav-btn-mobile w-full py-2 px-4 rounded-lg text-gray-700 text-left hover:bg-gray-100 transition duration-200">Dashboard</button>
+                    <button data-page="category-page" class="nav-btn-mobile w-full py-2 px-4 rounded-lg text-gray-700 text-left hover:bg-gray-100 transition duration-200">Category</button>
+                    <button data-page="transaction-page" class="nav-btn-mobile w-full py-2 px-4 rounded-lg text-gray-700 text-left hover:bg-gray-100 transition duration-200">Transaction</button>
+                    <button data-page="shared-page" class="nav-btn-mobile w-full py-2 px-4 rounded-lg text-gray-700 text-left hover:bg-gray-100 transition duration-200">Shared</button>
+                    <button id="logout-button-mobile" class="w-full py-2 px-4 rounded-lg text-sm text-red-500 text-left hover:bg-red-100 transition duration-200">Logout</button>
+                </div>
+            </nav>
+            
+            <div class="p-6 sm:p-8 flex-1">
+                <!-- Home Page Content -->
+                <div id="home-page" class="page-content space-y-4 hidden">
+                    <h2 class="text-2xl font-semibold text-gray-800">Welcome, <span id="username-display" class="font-bold"></span>!</h2>
+                    <div class="bg-gray-100 p-4 rounded-xl shadow-md">
+                        <h3 class="text-xl font-semibold text-gray-700">About Cash Compass</h3>
+                        <p class="text-gray-600 mt-2">
+                            Cash Compass is your personal expense tracker. Use it to log your daily spending, track your income, and view your financial health at a glance. Our goal is to give you a clear and simple way to manage your finances.
+                        </p>
+                    </div>
+                    <div class="bg-gray-100 p-4 rounded-xl shadow-md">
+                        <h3 class="text-xl font-semibold text-gray-700">How to get started</h3>
+                        <ul class="list-disc list-inside mt-2 text-gray-600 space-y-1">
+                            <li>Navigate to the **Transaction** page to add your first income or expense.</li>
+                            <li>Visit the **Category** page to see and manage your spending categories.</li>
+                            <li>Check the **Dashboard** for a summary of your financial activity.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Dashboard Page Content -->
+                <div id="dashboard-page" class="page-content space-y-4 hidden">
+                    <h2 class="text-2xl font-semibold text-gray-800">Dashboard</h2>
+                    <div class="space-y-2">
+                        <div class="bg-gray-100 p-4 rounded-xl shadow-inner text-center">
+                            <h2 class="text-gray-600 text-lg">Your Balance</h2>
+                            <h3 id="dashboard-balance" class="text-4xl font-extrabold text-gray-900 mt-1">$0.00</h3>
+                        </div>
+                        <div class="flex justify-around items-center space-x-4 text-center">
+                            <div class="bg-green-100 flex-1 p-4 rounded-xl shadow-md">
+                                <h4 class="text-green-600 text-sm font-medium">INCOME</h4>
+                                <p id="dashboard-income" class="text-green-800 text-2xl font-bold mt-1">$0.00</p>
+                            </div>
+                            <div class="bg-red-100 flex-1 p-4 rounded-xl shadow-md">
+                                <h4 class="text-red-600 text-sm font-medium">EXPENSE</h4>
+                                <p id="dashboard-expense" class="text-red-800 text-2xl font-bold mt-1">$0.00</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="widget-grid">
+                        <!-- Doughnut Chart for Expenses by Category -->
+                        <div class="widget bg-gray-100 p-4 rounded-xl shadow-md flex flex-col items-center">
+                            <h5 class="font-semibold mb-2">Expense by Category</h5>
+                            <div class="doughnut-chart-container">
+                                <canvas id="doughnut-chart-canvas"></canvas>
+                                <div class="doughnut-chart-center-text">
+                                    <span class="text-xl font-bold text-gray-800" id="total-expense-chart"></span>
+                                    <br><span class="text-sm text-gray-500">Expenses</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Spline Chart for Income vs Expense -->
+                        <div class="widget bg-gray-100 p-4 rounded-xl shadow-md">
+                            <h5 class="font-semibold mb-2">Income vs Expense</h5>
+                            <div class="h-48">
+                                <canvas id="spline-chart-canvas"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Transactions Table -->
+                    <div class="widget bg-gray-100 p-4 rounded-xl shadow-md">
+                        <h5 class="font-semibold mb-2">Recent Transactions</h5>
+                        <div id="recent-transactions-list" class="space-y-2">
+                            <!-- Recent transactions will be dynamically added here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category Page Content -->
+                <div id="category-page" class="page-content space-y-4 hidden">
+                    <h2 class="text-2xl font-semibold text-gray-800">Manage Categories</h2>
+                    <div class="space-y-3" id="category-list">
+                        <!-- Categories will be dynamically added here -->
+                    </div>
+                </div>
+
+                <!-- Transaction Page Content -->
+                <div id="transaction-page" class="page-content space-y-4 hidden">
+                    <div class="space-y-4">
+                        <h2 class="text-xl font-semibold text-gray-800 border-b pb-2 border-gray-200">Add new transaction</h2>
+                        <form id="transaction-form" class="space-y-4">
+                            <div>
+                                <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                                <input type="text" id="description" placeholder="Enter description..." required
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200">
+                            </div>
+                            <div>
+                                <label for="amount" class="block text-sm font-medium text-gray-700 mb-1">Amount
+                                    <span class="text-gray-500 font-normal text-xs">(negative - expense, positive - income)</span>
+                                </label>
+                                <input type="number" id="amount" placeholder="Enter amount..." required
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200">
+                            </div>
+                            <div>
+                                <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                                <select id="category-select" required
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200">
+                                    <option value="">Select Category</option>
+                                </select>
+                            </div>
+                            <button type="submit"
+                                    class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 transition duration-300">
+                                Add Transaction
+                            </button>
+                        </form>
+                    </div>
+                    <div class="space-y-4">
+                        <h2 class="text-xl font-semibold text-gray-800 border-b pb-2 border-gray-200">History</h2>
+                        <ul id="transaction-list" class="space-y-3 scrollable-list">
+                            <!-- Transactions will be dynamically added here -->
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Shared Page Content -->
+                <div id="shared-page" class="page-content space-y-4 hidden">
+                    <h2 class="text-2xl font-semibold text-gray-800">Shared Expenses</h2>
+                    
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-semibold text-gray-800 border-b pb-2 border-gray-200">Create a New Shared Expense</h3>
+                        <form id="shared-transaction-form" class="space-y-4">
+                            <div>
+                                <label for="shared-description" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                                <input type="text" id="shared-description" placeholder="Enter description..." required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200">
+                            </div>
+                            <div>
+                                <label for="shared-amount" class="block text-sm font-medium text-gray-700 mb-1">Total Amount</label>
+                                <input type="number" id="shared-amount" placeholder="Enter amount..." required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200">
+                            </div>
+                            <div>
+                                <label for="participants" class="block text-sm font-medium text-gray-700 mb-1">Participants</label>
+                                <p class="text-xs text-gray-500 mb-1">Enter usernames separated by commas (e.g., user1, user2)</p>
+                                <input type="text" id="participants" placeholder="Enter other participants' usernames..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200">
+                            </div>
+                            <button type="submit" class="w-full bg-green-600 text-white font-bold py-3 px-4 rounded-lg shadow-lg hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-500 focus:ring-opacity-50 transition duration-300">
+                                Create Shared Expense
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-semibold text-gray-800 border-b pb-2 border-gray-200">Your Shared Expenses</h3>
+                        <div id="shared-transaction-list" class="space-y-3 scrollable-list">
+                            <!-- Shared transactions will be dynamically added here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Balance and Summary (shown on all content pages) -->
+                <div id="balance-section" class="space-y-2 hidden">
+                    <div class="bg-gray-100 p-4 rounded-xl shadow-inner text-center">
+                        <h2 class="text-gray-600 text-lg">Your Balance</h2>
+                        <h3 id="balance-display" class="text-4xl font-extrabold text-gray-900 mt-1">$0.00</h3>
+                    </div>
+                    <div class="flex justify-around items-center space-x-4 text-center">
+                        <div class="bg-green-100 flex-1 p-4 rounded-xl shadow-md">
+                            <h4 class="text-green-600 text-sm font-medium">INCOME</h4>
+                            <p id="income-display" class="text-green-800 text-2xl font-bold mt-1">$0.00</p>
+                        </div>
+                        <div class="bg-red-100 flex-1 p-4 rounded-xl shadow-md">
+                            <h4 class="text-red-600 text-sm font-medium">EXPENSE</h4>
+                            <p id="expense-display" class="text-red-800 text-2xl font-bold mt-1">$0.00</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- JavaScript for Logic -->
+    <script>
+        // --- DOM Elements ---
+        const loginPage = document.getElementById('login-page');
+        const registerPage = document.getElementById('register-page');
+        const mainApp = document.getElementById('main-app');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const logoutButton = document.getElementById('logout-button');
+        const logoutButtonMobile = document.getElementById('logout-button-mobile');
+        const showLoginBtn = document.getElementById('show-login');
+        const showRegisterBtn = document.getElementById('show-register');
+        const navButtons = document.querySelectorAll('.nav-btn-desktop, .nav-btn-mobile');
+        const contentPages = document.querySelectorAll('.page-content');
+        const balanceSection = document.getElementById('balance-section');
+        const balanceDisplay = document.getElementById('balance-display');
+        const incomeDisplay = document.getElementById('income-display');
+        const expenseDisplay = document.getElementById('expense-display');
+        const transactionList = document.getElementById('transaction-list');
+        const transactionForm = document.getElementById('transaction-form');
+        const descriptionInput = document.getElementById('description');
+        const amountInput = document.getElementById('amount');
+        const categorySelect = document.getElementById('category-select');
+        const categoryListDiv = document.getElementById('category-list');
+        const usernameDisplay = document.getElementById('username-display');
+        const toggleNavBtn = document.getElementById('toggle-nav-btn');
+        const mobileNav = document.getElementById('mobile-nav');
+        
+        // Dashboard elements
+        const dashboardBalance = document.getElementById('dashboard-balance');
+        const dashboardIncome = document.getElementById('dashboard-income');
+        const dashboardExpense = document.getElementById('dashboard-expense');
+        const recentTransactionsList = document.getElementById('recent-transactions-list');
+        const totalExpenseChartText = document.getElementById('total-expense-chart');
+        
+        // Chart canvases
+        const doughnutChartCanvas = document.getElementById('doughnut-chart-canvas');
+        const splineChartCanvas = document.getElementById('spline-chart-canvas');
+
+        // Shared Page Elements
+        const sharedTransactionList = document.getElementById('shared-transaction-list');
+        const sharedTransactionForm = document.getElementById('shared-transaction-form');
+        const sharedDescriptionInput = document.getElementById('shared-description');
+        const sharedAmountInput = document.getElementById('shared-amount');
+        const participantsInput = document.getElementById('participants');
+
+        // --- State Management ---
+        const API_URL = 'http://localhost:6060';
+        let transactions = [];
+        let categories = [];
+        let sharedTransactions = [];
+        let isEditing = false;
+        let editId = null;
+        let authToken = localStorage.getItem('authToken');
+        
+        // Chart instances
+        let doughnutChart;
+        let splineChart;
+
+        // --- View Management ---
+        function showPage(pageId) {
+            loginPage.classList.add('hidden');
+            registerPage.classList.add('hidden');
+            mainApp.classList.remove('hidden');
+            
+            contentPages.forEach(page => page.classList.add('hidden'));
+            document.getElementById(pageId).classList.remove('hidden');
+
+            // Show balance section on specific pages
+            if (pageId === 'transaction-page' || pageId === 'home-page' || pageId === 'dashboard-page') {
+                balanceSection.classList.remove('hidden');
+            } else {
+                balanceSection.classList.add('hidden');
+            }
+            
+            // Highlight active nav button
+            navButtons.forEach(btn => {
+                const buttonPageId = btn.getAttribute('data-page');
+                if (buttonPageId === pageId) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            // Hide mobile menu on navigation
+            mobileNav.classList.add('hidden');
+
+            // Fetch data based on the page
+            if (pageId === 'transaction-page') {
+                fetchTransactions();
+                fetchCategories();
+            }
+            if (pageId === 'dashboard-page') {
+                fetchCategories();
+                fetchDashboardData();
+            }
+            if (pageId === 'category-page') {
+                fetchCategoriesAndRenderList();
+            }
+            if (pageId === 'shared-page') {
+                fetchSharedTransactions();
+            }
+        }
+
+        // --- API Calls ---
+        async function apiFetch(url, options = {}) {
+            const headers = {
+                'Content-Type': 'application/json',
+                ...options.headers
+            };
+            if (authToken) {
+                headers['Authorization'] = `Bearer ${authToken}`;
+            }
+            const response = await fetch(url, { ...options, headers });
+            if (response.status === 401) {
+                logout(); // Automatically log out on unauthorized
+            }
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'API call failed');
+            }
+            return response;
+        }
+
+        async function fetchTransactions() {
+            try {
+                const response = await apiFetch(`${API_URL}/api/transactions`);
+                transactions = await response.json();
+                renderTransactions();
+                updateTotals();
+            } catch (error) {
+                console.error('Error fetching transactions:', error);
+            }
+        }
+
+        async function fetchCategories() {
+            try {
+                const response = await apiFetch(`${API_URL}/api/categories`);
+                categories = await response.json();
+                renderCategoryDropdown();
+            } catch (error) {
+                console.error('Error fetching categories:', error);
+            }
+        }
+        
+        async function fetchCategoriesAndRenderList() {
+            try {
+                const response = await apiFetch(`${API_URL}/api/categories`);
+                categories = await response.json();
+                renderCategoryList();
+            } catch (error) {
+                console.error('Error fetching categories:', error);
+            }
+        }
+        
+        async function fetchDashboardData() {
+            try {
+                const response = await apiFetch(`${API_URL}/api/dashboard`);
+                const data = await response.json();
+                renderDashboard(data);
+            } catch (error) {
+                console.error('Error fetching dashboard data:', error);
+            }
+        }
+        
+        async function fetchSharedTransactions() {
+            try {
+                const response = await apiFetch(`${API_URL}/api/shared-transactions`);
+                sharedTransactions = await response.json();
+                renderSharedTransactions();
+            } catch (error) {
+                console.error('Error fetching shared transactions:', error);
+            }
+        }
+
+        async function createTransaction(transactionData) {
+            await apiFetch(`${API_URL}/api/transactions`, {
+                method: 'POST',
+                body: JSON.stringify(transactionData)
+            });
+            await fetchTransactions();
+        }
+
+        async function updateTransaction(id, transactionData) {
+            await apiFetch(`${API_URL}/api/transactions/${id}`, {
+                method: 'PUT',
+                body: JSON.stringify(transactionData)
+            });
+            await fetchTransactions();
+        }
+
+        async function deleteTransaction(id) {
+            await apiFetch(`${API_URL}/api/transactions/${id}`, {
+                method: 'DELETE'
+            });
+            await fetchTransactions();
+        }
+        
+        async function createCategory(categoryData) {
+            await apiFetch(`${API_URL}/api/categories`, {
+                method: 'POST',
+                body: JSON.stringify(categoryData)
+            });
+            await fetchCategoriesAndRenderList();
+        }
+        
+        async function deleteCategory(id) {
+            await apiFetch(`${API_URL}/api/categories/${id}`, {
+                method: 'DELETE'
+            });
+            await fetchCategoriesAndRenderList();
+        }
+        
+        async function createSharedTransaction(sharedTransactionData) {
+            await apiFetch(`${API_URL}/api/shared-transactions`, {
+                method: 'POST',
+                body: JSON.stringify(sharedTransactionData)
+            });
+            await fetchSharedTransactions();
+        }
+        
+        async function deleteSharedTransaction(id) {
+            await apiFetch(`${API_URL}/api/shared-transactions/${id}`, {
+                method: 'DELETE'
+            });
+            await fetchSharedTransactions();
+        }
+
+        // --- Authentication ---
+        async function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                const response = await fetch(`${API_URL}/api/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    authToken = data.token;
+                    localStorage.setItem('authToken', authToken);
+                    localStorage.setItem('username', username);
+                    usernameDisplay.textContent = username;
+                    showPage('home-page');
+                } else {
+                    alert(data.message || 'Login failed.');
+                    console.error('Login failed:', data.message);
+                }
+            } catch (error) {
+                alert('Error during login. Please check the server.');
+                console.error('Error during login:', error);
+            }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            const username = document.getElementById('register-username').value;
+            const password = document.getElementById('register-password').value;
+            try {
+                const response = await fetch(`${API_URL}/api/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                if (response.ok) {
+                    alert('Account created successfully. Please log in.');
+                    showPage('login-page');
+                } else {
+                    const errorData = await response.json();
+                    alert(errorData.message || 'Registration failed.');
+                    console.error('Registration failed:', errorData.message);
+                }
+            } catch (error) {
+                alert('Error during registration. Please check the server.');
+                console.error('Error during registration:', error);
+            }
+        }
+        
+        function logout() {
+            authToken = null;
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('username');
+            loginPage.classList.remove('hidden');
+            mainApp.classList.add('hidden');
+            transactions = [];
+            categories = [];
+            if(doughnutChart) doughnutChart.destroy();
+            if(splineChart) splineChart.destroy();
+            renderTransactions(); // Clear UI
+        }
+
+        // --- UI Rendering ---
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+            }).format(amount);
+        }
+        
+        function getCategoryNameById(id) {
+            const category = categories.find(c => c.id === id);
+            return category ? category.name : 'Uncategorized';
+        }
+
+        function addTransactionDOM(transaction) {
+            const item = document.createElement('li');
+            const sign = transaction.amount < 0 ? 'expense' : 'income';
+            const categoryName = getCategoryNameById(transaction.categoryId);
+            item.classList.add(
+                'relative', 'bg-gray-50', 'p-4', 'rounded-xl', 'shadow-sm', 'flex', 'justify-between', 'items-center',
+                'border-r-4', sign === 'expense' ? 'border-red-500' : 'border-green-500', 'transition', 'duration-200', 'hover:shadow-md', 'group', 'transaction-item'
+            );
+            item.innerHTML = `
+                <div class="flex-1">
+                    <span class="text-gray-800 font-medium">${transaction.description}</span>
+                    <p class="text-sm text-gray-500">${categoryName}</p>
+                </div>
+                <div class="text-right flex items-center space-x-2">
+                    <span class="text-lg font-bold ${sign === 'expense' ? 'text-red-600' : 'text-green-600'}">
+                        ${formatCurrency(transaction.amount)}
+                    </span>
+                    <div class="action-buttons space-x-2 hidden group-hover:flex transition-opacity duration-300">
+                        <button onclick="editTransaction(${transaction.id})" class="text-blue-500 hover:text-blue-700 transition duration-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zm-3.146 6.852l-2.828 2.828-4.99 4.99a1 1 0 01-1.414-1.414l4.99-4.99 2.828-2.828z" />
+                            </svg>
+                        </button>
+                        <button onclick="deleteTransaction(${transaction.id})" class="text-red-500 hover:text-red-700 transition duration-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm6 0a1 1 0 01-2 0v6a1 1 0 112 0V8z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `;
+            transactionList.appendChild(item);
+        }
+
+        function updateTotals() {
+            const amounts = transactions.map(t => t.amount);
+            const total = amounts.reduce((acc, curr) => acc + curr, 0);
+            const income = amounts.filter(amount => amount > 0).reduce((acc, curr) => acc + curr, 0);
+            const expense = amounts.filter(amount => amount < 0).reduce((acc, curr) => acc + curr, 0);
+
+            balanceDisplay.textContent = formatCurrency(total);
+            incomeDisplay.textContent = formatCurrency(income);
+            expenseDisplay.textContent = formatCurrency(expense);
+        }
+
+        function renderTransactions() {
+            transactionList.innerHTML = '';
+            transactions.forEach(addTransactionDOM);
+        }
+        
+        function renderCategoryDropdown() {
+            categorySelect.innerHTML = '<option value="">Select Category</option>'; // Clear existing options
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category.id;
+                option.textContent = `${category.name} (${category.type})`;
+                categorySelect.appendChild(option);
+            });
+        }
+        
+        function renderCategoryList() {
+            categoryListDiv.innerHTML = `
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-semibold">Your Categories</h3>
+                    <button id="add-category-btn" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-lg hover:bg-blue-700 transition duration-300">
+                        + New Category
+                    </button>
+                </div>
+                <div id="category-form-container" class="hidden bg-gray-100 p-6 rounded-xl shadow-inner mb-4">
+                    <h4 class="text-lg font-semibold mb-2">Add New Category</h4>
+                    <form id="add-category-form" class="space-y-4">
+                        <div>
+                            <label for="category-name" class="block text-sm font-medium text-gray-700">Category Name</label>
+                            <input type="text" id="category-name" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label for="category-type" class="block text-sm font-medium text-gray-700">Type</label>
+                            <select id="category-type" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                <option value="Expense">Expense</option>
+                                <option value="Income">Income</option>
+                            </select>
+                        </div>
+                        <div class="flex justify-end space-x-2">
+                            <button type="button" id="cancel-add-category" class="bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-lg hover:bg-gray-400">Cancel</button>
+                            <button type="submit" class="bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700">Save Category</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            const listItems = document.createElement('div');
+            listItems.classList.add('space-y-3');
+            categories.forEach(category => {
+                const item = document.createElement('div');
+                item.classList.add(
+                    'bg-gray-100', 'p-4', 'rounded-xl', 'shadow-sm', 'flex', 'justify-between', 'items-center', 'group'
+                );
+                item.innerHTML = `
+                    <div class="flex items-center space-x-3">
+                        <span class="font-medium">${category.name}</span>
+                        <span class="text-sm font-medium ${category.type === 'Income' ? 'text-green-600' : 'text-red-600'}">${category.type}</span>
+                    </div>
+                    <div class="flex items-center space-x-2 hidden group-hover:flex">
+                        <button onclick="deleteCategory(${category.id})" class="text-red-500 hover:text-red-700">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm6 0a1 1 0 01-2 0v6a1 1 0 112 0V8z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                `;
+                listItems.appendChild(item);
+            });
+            categoryListDiv.appendChild(listItems);
+            
+            // Add event listeners for the new form
+            document.getElementById('add-category-btn').addEventListener('click', () => {
+                document.getElementById('category-form-container').classList.remove('hidden');
+            });
+            document.getElementById('cancel-add-category').addEventListener('click', () => {
+                document.getElementById('category-form-container').classList.add('hidden');
+                document.getElementById('add-category-form').reset();
+            });
+            document.getElementById('add-category-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const name = document.getElementById('category-name').value;
+                const type = document.getElementById('category-type').value;
+                await createCategory({ name, type });
+                document.getElementById('category-form-container').classList.add('hidden');
+                document.getElementById('add-category-form').reset();
+            });
+        }
+
+        // --- Dashboard Rendering ---
+        const colors = [
+            '#0e8d76', '#a4b219', '#cb9b00', '#8a442c', '#0454b5', '#7d0a0a', '#822690', '#4c2090', '#313e93', '#0096ac',
+            '#422998', '#997321', '#ffc409', '#663366', '#a5c928', '#c97e11'
+        ];
+        
+        function renderDashboard(data) {
+            dashboardBalance.textContent = formatCurrency(data.totalBalance);
+            dashboardIncome.textContent = formatCurrency(data.totalIncome);
+            dashboardExpense.textContent = formatCurrency(data.totalExpense);
+            totalExpenseChartText.textContent = formatCurrency(data.totalExpense);
+            
+            renderDoughnutChart(data.expenseByCategory);
+            renderSplineChart(data.dailyTransactions);
+            renderRecentTransactions(data.recentTransactions);
+        }
+
+        function renderDoughnutChart(expenseData) {
+            if (doughnutChart) {
+                doughnutChart.destroy();
+            }
+            
+            const labels = Object.keys(expenseData).map(id => getCategoryNameById(parseInt(id)));
+            const data = Object.values(expenseData).map(amount => Math.abs(amount));
+            
+            const ctx = doughnutChartCanvas.getContext('2d');
+            doughnutChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: colors.slice(0, labels.length),
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    cutout: '60%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#4b5563', // gray-600
+                                boxWidth: 12,
+                                boxHeight: 12,
+                                padding: 15,
+                                font: {
+                                    family: 'Inter'
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed) {
+                                        label += formatCurrency(context.parsed);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function renderSplineChart(dailyTransactions) {
+            if (splineChart) {
+                splineChart.destroy();
+            }
+
+            const dates = Object.keys(dailyTransactions);
+            const incomeData = dates.map(date => dailyTransactions[date].income || 0);
+            const expenseData = dates.map(date => Math.abs(dailyTransactions[date].expense || 0));
+
+            const ctx = splineChartCanvas.getContext('2d');
+            splineChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: 'Income',
+                        data: incomeData,
+                        borderColor: '#10b981', // green-500
+                        backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                        tension: 0.4,
+                        fill: true
+                    }, {
+                        label: 'Expense',
+                        data: expenseData,
+                        borderColor: '#ef4444', // red-500
+                        backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        },
+                        y: {
+                            grid: {
+                                color: '#e5e7eb' // gray-200
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        }
+                    }
+                }
+            });
+        }
+        
+        function renderRecentTransactions(recentTransactions) {
+            recentTransactionsList.innerHTML = '';
+            recentTransactions.forEach(t => {
+                const item = document.createElement('div');
+                item.classList.add(
+                    'bg-gray-50', 'p-3', 'rounded-lg', 'shadow-sm', 'flex', 'justify-between', 'items-center'
+                );
+                const sign = t.amount < 0 ? 'text-red-600' : 'text-green-600';
+                item.innerHTML = `
+                    <div class="flex-1">
+                        <span class="font-medium">${t.description}</span>
+                        <p class="text-xs text-gray-500">${getCategoryNameById(t.categoryId)}</p>
+                    </div>
+                    <span class="text-sm font-bold ${sign}">${formatCurrency(t.amount)}</span>
+                `;
+                recentTransactionsList.appendChild(item);
+            });
+        }
+        
+        function renderSharedTransactions() {
+            sharedTransactionList.innerHTML = '';
+            const currentUsername = localStorage.getItem('username');
+            
+            sharedTransactions.forEach(st => {
+                const item = document.createElement('div');
+                item.classList.add(
+                    'bg-gray-100', 'p-4', 'rounded-xl', 'shadow-md', 'flex', 'flex-col', 'space-y-2', 'group', 'relative'
+                );
+                
+                const isOwner = st.ownerId === currentUsername;
+                const participantsList = st.participants.filter(p => p !== currentUsername).join(', ');
+                
+                item.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1">
+                            <span class="font-semibold text-lg text-gray-800">${st.description}</span>
+                            <p class="text-sm text-gray-600">Amount: <span class="font-bold">${formatCurrency(st.amount)}</span></p>
+                            <p class="text-sm text-gray-500">
+                                ${isOwner ? 'You created this' : `Created by ${st.ownerId}`}
+                            </p>
+                            ${participantsList ? `<p class="text-sm text-gray-500">Shared with: ${participantsList}</p>` : ''}
+                        </div>
+                        ${isOwner ? `
+                        <div class="absolute top-4 right-4 flex space-x-2 hidden group-hover:flex">
+                            <button onclick="deleteSharedTransaction(${st.id})" class="text-red-500 hover:text-red-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm6 0a1 1 0 01-2 0v6a1 1 0 112 0V8z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </div>` : ''}
+                    </div>
+                `;
+                sharedTransactionList.appendChild(item);
+            });
+        }
+
+
+        // --- Event Handlers ---
+        transactionForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const description = descriptionInput.value.trim();
+            const amount = parseFloat(amountInput.value);
+            const categoryId = categorySelect.value ? parseInt(categorySelect.value) : null;
+
+            if (description === '' || isNaN(amount) || !categoryId) {
+                return alert('Please add a valid description, amount, and category.');
+            }
+
+            const transactionData = { description, amount, categoryId };
+            try {
+                if (isEditing) {
+                    await updateTransaction(editId, transactionData);
+                    isEditing = false;
+                    editId = null;
+                    transactionForm.querySelector('button[type="submit"]').textContent = 'Add Transaction';
+                } else {
+                    await createTransaction(transactionData);
+                }
+                transactionForm.reset();
+            } catch (error) {
+                console.error('Error submitting transaction:', error);
+                alert('Failed to save transaction. Please check the server.');
+            }
+        });
+        
+        sharedTransactionForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const description = sharedDescriptionInput.value.trim();
+            const amount = parseFloat(sharedAmountInput.value);
+            const participantsString = participantsInput.value.trim();
+            const participants = participantsString.split(',').map(p => p.trim()).filter(p => p !== '');
+            
+            if (description === '' || isNaN(amount)) {
+                return alert('Please add a valid description and amount.');
+            }
+            
+            const sharedTransactionData = { description, amount, participants };
+            try {
+                await createSharedTransaction(sharedTransactionData);
+                sharedTransactionForm.reset();
+            } catch (error) {
+                console.error('Error submitting shared transaction:', error);
+                alert('Failed to save shared transaction. Please check the server.');
+            }
+        });
+
+
+        function editTransaction(id) {
+            const transactionToEdit = transactions.find(t => t.id === id);
+            if (transactionToEdit) {
+                descriptionInput.value = transactionToEdit.description;
+                amountInput.value = transactionToEdit.amount;
+                categorySelect.value = transactionToEdit.categoryId || '';
+                isEditing = true;
+                editId = id;
+                transactionForm.querySelector('button[type="submit"]').textContent = 'Update Transaction';
+                descriptionInput.focus();
+            }
+        }
+
+        // Publicly expose the delete function for the button
+        window.deleteTransaction = async (id) => {
+            try {
+                await deleteTransaction(id);
+            } catch (error) {
+                console.error('Error deleting transaction:', error);
+                alert('Failed to delete transaction. Please check the server.');
+            }
+        };
+
+        // Publicly expose the deleteCategory function for the button
+        window.deleteCategory = async (id) => {
+            try {
+                await deleteCategory(id);
+            } catch (error) {
+                console.error('Error deleting category:', error);
+                alert('Failed to delete category. Please check the server.');
+            }
+        };
+        
+        window.deleteSharedTransaction = async (id) => {
+            try {
+                await deleteSharedTransaction(id);
+            } catch (error) {
+                console.error('Error deleting shared transaction:', error);
+                alert('Failed to delete shared transaction. Please check the server.');
+            }
+        };
+
+        // --- Event Listeners & Initialization ---
+        loginForm.addEventListener('submit', handleLogin);
+        registerForm.addEventListener('submit', handleRegister);
+        logoutButton.addEventListener('click', logout);
+        logoutButtonMobile.addEventListener('click', logout);
+        showLoginBtn.addEventListener('click', (e) => { e.preventDefault(); showLogin(); });
+        showRegisterBtn.addEventListener('click', (e) => { e.preventDefault(); showRegister(); });
+        toggleNavBtn.addEventListener('click', () => {
+            mobileNav.classList.toggle('hidden');
+        });
+        
+        navButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const pageId = e.currentTarget.getAttribute('data-page');
+                showPage(pageId);
+            });
+        });
+
+        function showLogin() {
+            loginPage.classList.remove('hidden');
+            registerPage.classList.add('hidden');
+            mainApp.classList.add('hidden');
+        }
+
+        function showRegister() {
+            loginPage.classList.add('hidden');
+            registerPage.classList.remove('hidden');
+            mainApp.classList.add('hidden');
+        }
+
+        window.onload = () => {
+            const storedUsername = localStorage.getItem('username');
+            if (authToken && storedUsername) {
+                usernameDisplay.textContent = storedUsername;
+                showPage('home-page');
+            } else {
+                showLogin();
+            }
+        };
+    </script>
+</body>
+</html>
