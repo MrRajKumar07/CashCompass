@@ -51,6 +51,36 @@ CashCompass/
 ├── pom.xml                                           # Maven build file
 └── README.md
 ```
+## 📸 Screenshots / Demo
+
+<p align="left">
+  <img src="https://github.com/user-attachments/assets/0610adad-151f-43c0-aefd-85a411358b21" alt="Screenshot 1" width="800"/>
+</p>
+
+<p align="left">
+  <img src="https://github.com/user-attachments/assets/25103ac0-eeb2-4b2b-a12e-5e3a1d17206b" alt="Screenshot 2" width="800"/>
+</p>
+
+<p align="left">
+  <img src="https://github.com/user-attachments/assets/c0e912f6-3c43-4d19-94cf-b4e4c0861967" alt="Screenshot 3" width="800"/>
+</p>
+
+<p align="left">
+  <img src="https://github.com/user-attachments/assets/3dfb03fe-9456-4a94-b8e0-1d3737d92a75" alt="Screenshot 4" width="800"/>
+</p>
+
+<p align="left">
+  <img src="https://github.com/user-attachments/assets/1f353b47-7bd2-46b4-9861-3f75eb920322" alt="Screenshot 5" width="800"/>
+</p>
+
+<p align="left">
+  <img src="https://github.com/user-attachments/assets/aa7874b5-b276-4419-878a-d9ac57fd7d1b" alt="Screenshot 6" width="800"/>
+</p>
+
+<p align="left">
+  <img src="https://github.com/user-attachments/assets/3cdd5fdd-71cb-49ab-81e1-17a710aca3c5" alt="Screenshot 7" width="800"/>
+</p>
+
 ## 🚀 Local Setup Guide
 
 To get a local copy up and running, you only need to build and run the single Spring Boot application.
