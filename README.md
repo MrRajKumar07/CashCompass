@@ -101,28 +101,26 @@ cd CashCompass
 The project uses the standard Spring Boot structure, with the entire web UI served directly from the `static` resource directory.
 
 ### Step 2: Configure and Run the Application
-**Configure Database** : Edit the application settings in src/main/resources/application.properties (or .yml) to connect to your preferred database.
+- **Configure Database** : Edit the application settings in src/main/resources/application.properties (or .yml) to connect to your preferred database.
 
-**Build and Run** : Use Maven to compile and start the Spring Boot application.
+- **Build and Run** : Use Maven to compile and start the Spring Boot application.
 
-Bash
-
-```bash
+```
 mvn clean install
 mvn spring-boot:run
 ```
 
 ### Step 3: Access the Frontend
-Once the Spring Boot server is running (typically on port 8080), the embedded frontend is available at the root URL.
+- Once the Spring Boot server is running (typically on port 8080), the embedded frontend is available at the root URL.
 
 Open your web browser and navigate to:
-```bash
+```
 http://localhost:8080/
 ```
 
 ### 📝 Usage
-**Auth** : Use the Login and Create one links to register and authenticate.
+- **Auth** : Use the Login and Create one links to register and authenticate.
 
-**Dashboard** : On login, view your balance and summary charts (requires data).
+- **Dashboard** : On login, view your balance and summary charts (requires data).
 
-**Transaction** : Use the form to record new income (+ve) or expenses (-ve).
+- **Transaction** : Use the form to record new income (+ve) or expenses (-ve).
