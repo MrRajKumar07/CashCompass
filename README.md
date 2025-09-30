@@ -113,7 +113,7 @@ mvn spring-boot:run
 ### Step 3: Access the Frontend
 - Once the Spring Boot server is running (typically on port 8080), the embedded frontend is available at the root URL.
 
-Open your web browser and navigate to:
+- Open your web browser and navigate to:
 ```
 http://localhost:8080/
 ```
